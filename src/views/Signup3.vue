@@ -1,6 +1,6 @@
 <template>
   <div class="join_content">
-    <h1>회원가입 - STEP 3</h1>
+    <h1>회원가입 - 부가정보</h1>
     <!-- 아이디, 비밀번호 입력 -->
     <div class="row_group">
       <div class="join_row">

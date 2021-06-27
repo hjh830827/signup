@@ -1,99 +1,146 @@
 <template>
   <div class="join_content">
-    <h1>회원가입 - STEP 2</h1>
-    <!-- 아이디, 비밀번호 입력 -->
+    <h1>회원가입 - 개인정보</h1>
     <div class="row_group">
       <div class="join_row">
-        <h3 class="join_title">이메일</h3>
-        <span class="ps_box">
-          <input class="int" v-model="email" type="text" maxlength="20" />
+        <h3 class="join_title">이름</h3>
+        <span class="ps_box box_right_space">
+          <input
+            class="int"
+            v-model="signup.name"
+            type="text"
+            placeholder="이름을 입력해주세요"
+            maxlength="20"
+          />
         </span>
-        <select name="emailaddr">
-          <option value="">
-            직접입력
-          </option>
-          <option value="daum.net">
-            daum.net
-          </option>
-          <option value="empal.com">
-            empal.com
-          </option>
-          <option value="gmail.com">
-            gmail.com
-          </option>
-          <option value="hanmail.net">
-            hanmail.net
-          </option>
-          <option value="msn.com">
-            msn.com
-          </option>
-          <option value="naver.com">
-            naver.com
-          </option>
-          <option value="nate.com">
-            nate.com
-          </option>
-        </select>
-        <span class="error_next_box" v-if="!idValid">필수 정보입니다.</span>
+        <span class="error_next_box" v-if="checkFlag && !signup.name"
+          >이름을 입력하세요</span
+        >
+      </div>
+
+      <div class="join_row join_birthday">
+        <h3 class="join_title">생년월일</h3>
+        <div class="bir_wrap">
+          <div class="bir_yy">
+            <span class="ps_box">
+              <input
+                v-model="signup.yyyy"
+                type="text"
+                placeholder="년(4자)"
+                class="int"
+                maxlength="4"
+                oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
+              />
+            </span>
+          </div>
+          <div class="bir_mm">
+            <span class="ps_box">
+              <select id="mm" class="sel" v-model="signup.mm">
+                <option value="">월</option>
+                <option
+                  v-for="(item, index) in mmlist"
+                  :key="index"
+                  :value="item.value"
+                >
+                  {{ item.text }}
+                </option>
+              </select>
+            </span>
+          </div>
+          <div class=" bir_dd">
+            <span class="ps_box">
+              <input
+                v-model="signup.dd"
+                placeholder="일"
+                type="text"
+                class="int"
+                maxlength="2"
+              />
+            </span>
+          </div>
+        </div>
+        <span
+          class="error_next_box"
+          v-if="checkFlag && (!signup.yyyy || !signup.mm || !signup.dd)"
+          >생년월일을 입력하세요</span
+        >
+      </div>
+
+      <div class="join_row join_sex">
+        <h3 class="join_title">성별</h3>
+        <span class="ps_box gender_code">
+          <select class="sel" v-model="signup.gender">
+            <option value="">성별</option>
+            <option
+              v-for="(item, index) in genderList"
+              :key="index"
+              :value="item.value"
+            >
+              {{ item.text }}
+            </option>
+          </select>
+        </span>
+        <span class="error_next_box" v-if="checkFlag && !signup.gender"
+          >성별을 선택하세요</span
+        >
+      </div>
+
+      <span
+        class="error_next_box"
+        id="genderMsg"
+        style="display:none"
+        aria-live="assertive"
+      ></span>
+
+      <div class="join_row join_email">
+        <h3 class="join_title">
+          <label for="email">이메일<span class="terms_choice"></span></label>
+        </h3>
+        <span class="ps_box int_email box_right_space">
+          <input
+            type="text"
+            v-model="signup.email"
+            placeholder="이메일을 입력해주세요"
+            class="int"
+            maxlength="100"
+          />
+        </span>
+        <span class="error_next_box" v-if="checkFlag && !signup.email"
+          >이메일을 입력해주세요</span
+        >
       </div>
 
       <div class="join_row">
-        <h3 class="join_title">비밀번호</h3>
-        <span class="ps_box">
+        <h3 class="join_title">주소</h3>
+        <span class="ps_box box_right_space">
           <input
+            type="text"
             class="int"
-            v-model="signup.password"
-            type="password"
-            maxlength="16"
-            @blur="passwordValid"
+            v-model="signup.address"
+            placeholder="주소를 입력해주세요"
           />
         </span>
-        <span class="error_next_box" v-if="!passwordValidFlag"
-          >유효하지 않은 비밀번호 입니다.</span
+        <span class="error_next_box" v-if="checkFlag && !signup.address"
+          >주소를 입력해주세요</span
         >
-
-        <h3 class="join_title">비밀번호 재확인</h3>
-        <span class="ps_box">
+      </div>
+      <div class="join_row">
+        <h3 class="join_title">휴대폰번호</h3>
+        <span class="ps_box box_right_space">
           <input
             class="int"
-            v-model="passwordCheck"
-            type="password"
-            maxlength="16"
-            @blur="passwordCheckValid"
+            v-model="signup.phoneNum"
+            type="text"
+            placeholder="휴대폰 번호를 입력해주세요"
           />
         </span>
-        <span class="error_next_box" v-if="!passwordCheckFlag"
-          >비밀번호가 동일하지 않습니다.</span
+        <span class="error_next_box" v-if="checkFlag && !signup.phoneNum"
+          >휴대폰 번호를 입력해주세요</span
         >
-
-        <h3 class="join_title">비밀번호 힌트</h3>
-        <select class="sel" v-model="signup.pwhint" size="1">
-          <option value="">
-            선택하세요
-          </option>
-          <option
-            v-for="(item, index) in pwhintList"
-            :key="index"
-            :value="item.value"
-          >
-            {{ item.text }}
-          </option>
-        </select>
-
-        <h3 class="join_title">답변</h3>
-        <span class="ps_box">
-          <input class="int" v-model="signup.pwhintans" />
-        </span>
       </div>
     </div>
-    <!-- // 아이디, 비밀번호 입력 -->
     <div class="btn_area">
-      <button
-        type="button"
-        class="btn_type btn_primary"
-        :disabled="nextPageDisabledFlag"
-        @click="goNextPage"
-      >
+      <button type="button" class="btn_type btn_primary" @click="goNextPage">
         <span>다음 페이지</span>
       </button>
     </div>
@@ -108,27 +155,49 @@ export default {
     },
   },
   props: {
-    signup: {
+    propSignup: {
       type: Object,
       default: null,
     },
   },
   data() {
     return {
-      test: "",
-      onlyNum: "",
-      signupTest: {},
-      email: "",
+      checkFlag: false,
+      signup: {
+        // id: this.propSignup.id,
+        // password: this.propSignup.password,
+        // pwhint: this.propSignup.pwhint,
+        // pwhintans: this.propSignup.pwhintans,
+
+        name: null,
+        yyyy: null,
+        mm: "",
+        dd: null,
+        gender: "",
+      },
+      genderList: [
+        {
+          value: "M",
+          text: "남성",
+        },
+        {
+          value: "F",
+          text: "여성",
+        },
+      ],
+      mmlist: [],
     };
   },
   computed: {
+    idValid() {
+      return /^[A-Za-z0-9]+$/.test(this.email);
+    },
     computeOnlyNum() {
       if (this.person.age > 18) {
         return "Adult";
       } else {
         return "Minor";
       }
-      // this.onlyNum = this.onlyNum.replace(/[^0-9]/g, '')
     },
     nextPageDisabledFlag() {
       let flag = true;
@@ -144,7 +213,13 @@ export default {
     },
   },
   created() {
-    console.log(this.$store.state.todos.list[0]);
+    // console.log(this.$store.state.todos.list[0]);
+    for (let i = 1; i < 13; i++) {
+      this.mmlist.push({
+        value: i,
+        text: i,
+      });
+    }
   },
   mounted() {
     // this.test = this.$store.state.todos.list[0].text
@@ -152,7 +227,8 @@ export default {
   methods: {
     goNextPage() {
       console.log("=====================");
-      console.log(this.items);
+      console.log(this.signup);
+      this.checkFlag = true;
       // this.$router.push({ name: 'signup2', params: { signup: this.signup } })
     },
   },
