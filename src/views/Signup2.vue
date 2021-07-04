@@ -11,6 +11,7 @@
             type="text"
             placeholder="이름을 입력해주세요"
             maxlength="20"
+            @focus="checkFlag = false"
           />
         </span>
         <span class="error_next_box" v-if="checkFlag && !signup.name"
@@ -23,19 +24,31 @@
         <div class="bir_wrap">
           <div class="bir_yy">
             <span class="ps_box">
-              <input
+              <select
+                id="mm"
+                class="sel"
                 v-model="signup.yyyy"
-                type="text"
-                placeholder="년(4자)"
-                class="int"
-                maxlength="4"
-                oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
-              />
+                @focus="checkFlag = false"
+              >
+                <option value="">년</option>
+                <option
+                  v-for="(item, index) in yyyyList"
+                  :key="index"
+                  :value="item.value"
+                >
+                  {{ item.text }}
+                </option>
+              </select>
             </span>
           </div>
           <div class="bir_mm">
             <span class="ps_box">
-              <select id="mm" class="sel" v-model="signup.mm">
+              <select
+                id="mm"
+                class="sel"
+                v-model="signup.mm"
+                @focus="checkFlag = false"
+              >
                 <option value="">월</option>
                 <option
                   v-for="(item, index) in mmlist"
@@ -55,6 +68,8 @@
                 type="text"
                 class="int"
                 maxlength="2"
+                oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
+                @focus="checkFlag = false"
               />
             </span>
           </div>
@@ -69,7 +84,11 @@
       <div class="join_row join_sex">
         <h3 class="join_title">성별</h3>
         <span class="ps_box gender_code">
-          <select class="sel" v-model="signup.gender">
+          <select
+            class="sel"
+            v-model="signup.gender"
+            @focus="checkFlag = false"
+          >
             <option value="">성별</option>
             <option
               v-for="(item, index) in genderList"
@@ -103,6 +122,7 @@
             placeholder="이메일을 입력해주세요"
             class="int"
             maxlength="100"
+            @focus="checkFlag = false"
           />
         </span>
         <span class="error_next_box" v-if="checkFlag && !signup.email"
@@ -118,6 +138,8 @@
             class="int"
             v-model="signup.address"
             placeholder="주소를 입력해주세요"
+            maxlength="100"
+            @focus="checkFlag = false"
           />
         </span>
         <span class="error_next_box" v-if="checkFlag && !signup.address"
@@ -132,6 +154,8 @@
             v-model="signup.phoneNum"
             type="text"
             placeholder="휴대폰 번호를 입력해주세요"
+            maxlength="11"
+            @focus="checkFlag = false"
           />
         </span>
         <span class="error_next_box" v-if="checkFlag && !signup.phoneNum"
@@ -169,11 +193,14 @@ export default {
         // pwhint: this.propSignup.pwhint,
         // pwhintans: this.propSignup.pwhintans,
 
-        name: null,
-        yyyy: null,
+        name: "",
+        yyyy: "",
         mm: "",
-        dd: null,
+        dd: "",
         gender: "",
+        email: "",
+        address: "",
+        phoneNum: "",
       },
       genderList: [
         {
@@ -185,6 +212,7 @@ export default {
           text: "여성",
         },
       ],
+      yyyyList: [],
       mmlist: [],
     };
   },
@@ -214,6 +242,12 @@ export default {
   },
   created() {
     // console.log(this.$store.state.todos.list[0]);
+    const nowYear = new Date().getFullYear();
+    for (let i = 0; i < 100; i++) {
+      let date = nowYear - i;
+      this.yyyyList.push({ value: date, text: date });
+    }
+
     for (let i = 1; i < 13; i++) {
       this.mmlist.push({
         value: i,
@@ -225,11 +259,28 @@ export default {
     // this.test = this.$store.state.todos.list[0].text
   },
   methods: {
+    // 데이터 empty 체크
+    isEmpty(data) {
+      if (data === "" || data === null || data === undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     goNextPage() {
-      console.log("=====================");
-      console.log(this.signup);
       this.checkFlag = true;
-      // this.$router.push({ name: 'signup2', params: { signup: this.signup } })
+      if (
+        !this.isEmpty(this.signup.name) &&
+        !this.isEmpty(this.signup.yyyy) &&
+        !this.isEmpty(this.signup.mm) &&
+        !this.isEmpty(this.signup.dd) &&
+        !this.isEmpty(this.signup.gender) &&
+        !this.isEmpty(this.signup.email) &&
+        !this.isEmpty(this.signup.address) &&
+        !this.isEmpty(this.signup.phoneNum)
+      ) {
+        this.$router.push({ name: "signup3", params: { signup: this.signup } });
+      }
     },
   },
 };
