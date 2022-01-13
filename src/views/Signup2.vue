@@ -194,7 +194,7 @@ export default {
         // pwhintans: this.propSignup.pwhintans,
 
         name: "",
-        yyyy: "",
+        yyyy: "2000",
         mm: "",
         dd: "",
         gender: "",

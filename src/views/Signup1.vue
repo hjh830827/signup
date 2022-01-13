@@ -58,6 +58,27 @@
         <span class="ps_box">
           <input class="int" v-model="signup.pwhintans" />
         </span>
+        <!-- <span class="ps_box" v-for="(item,index) in 2" :key="index">
+          <input class="int" v-model="signup.pwhintans" />
+        </span> -->
+        <table id="list">
+          <tbody id="contacts">
+            <tr v-for="index in 3" :key="index">
+              <td v-if="index === 1">구분</td>
+              <td v-if="index === 2">미분양</td>
+              <td v-if="index === 3">변동률(%)</td>
+              <td v-for="(item, index2) in testList.data" :key="index2">
+                {{
+                  index === 1
+                    ? item.날짜
+                    : index === 2
+                    ? item.미분양
+                    : item.변동률
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <!-- // 아이디, 비밀번호 입력 -->
@@ -109,6 +130,28 @@ export default {
       ],
       passwordValidFlag: true,
       passwordCheckFlag: true,
+      testList: {
+        data: [
+          {
+            날짜: 201101,
+            미분양: 1111,
+            증감: null,
+            변동률: 0.02,
+          },
+          {
+            날짜: 201102,
+            미분양: 2222,
+            증감: 1111,
+            변동률: 0.5,
+          },
+          {
+            날짜: 201103,
+            미분양: 1111,
+            증감: -1111,
+            변동률: -0.5,
+          },
+        ],
+      },
     };
   },
   computed: {
