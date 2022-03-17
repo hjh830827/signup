@@ -28,6 +28,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Signup3.vue"),
   },
+  {
+    path: "/gridTest",
+    name: "gridTest",
+    component: () =>
+      import(/* webpackChunkName: "gridTest" */ "../views/gridTest.vue"),
+  },
 ];
 
 const router = new VueRouter({
